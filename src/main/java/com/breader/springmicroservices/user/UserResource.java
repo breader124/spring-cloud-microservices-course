@@ -62,7 +62,7 @@ public class UserResource {
         userDaoService.deleteUser(id);
     }
 
-    @GetMapping("users/{id}/posts")
+    @GetMapping(value = "users/{id}/posts")
     public List<Post> getAllPostsForUser(@PathVariable int id) {
         return userDaoService.findAllPosts(id);
     }

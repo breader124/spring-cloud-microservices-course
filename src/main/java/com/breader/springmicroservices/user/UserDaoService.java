@@ -1,14 +1,14 @@
 package com.breader.springmicroservices.user;
 
 import com.breader.springmicroservices.exception.UserNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class UserDaoService {
     private static final List<User> userList = new ArrayList<>();
     private static int userCount = 3;
