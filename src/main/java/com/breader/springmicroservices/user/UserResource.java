@@ -3,6 +3,8 @@ package com.breader.springmicroservices.user;
 import com.breader.springmicroservices.exception.PostNotFoundException;
 import com.breader.springmicroservices.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +12,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,20 +24,32 @@ public class UserResource {
     private final UserDaoService userDaoService;
 
     @GetMapping("users")
-    public List<User> getAllUsers() {
-        return userDaoService.findAll();
+    public List<EntityModel<User>> getAllUsers() {
+        List<EntityModel<User>> userResourceList = new ArrayList<>();
+        userDaoService.findAllUsers().forEach(user -> {
+            EntityModel<User> resource = EntityModel.of(user);
+            WebMvcLinkBuilder linkToUser = linkTo(methodOn(this.getClass()).getUser(user.getId()));
+            resource.add(linkToUser.withRel("user-info"));
+            userResourceList.add(resource);
+        });
+        return userResourceList;
     }
 
     @GetMapping("users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable int id) {
-        return userDaoService.findOne(id)
-                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+    public EntityModel<User> getUser(@PathVariable int id) {
+        return userDaoService.findUser(id)
+                .map(user -> {
+                    EntityModel<User> resource = EntityModel.of(user);
+                    WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getAllUsers());
+                    resource.add(linkTo.withRel("all-users"));
+                    return resource;
+                })
                 .orElseThrow(UserNotFoundException::new);
     }
 
     @PostMapping("users")
     public ResponseEntity<URI> saveUser(@Valid @RequestBody User u) {
-        User newUser = userDaoService.save(u);
+        User newUser = userDaoService.saveUser(u);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(newUser.getId())
@@ -41,7 +59,7 @@ public class UserResource {
 
     @DeleteMapping("users/{id}")
     public void deleteUser(@PathVariable int id) {
-        userDaoService.deleteOne(id);
+        userDaoService.deleteUser(id);
     }
 
     @GetMapping("users/{id}/posts")

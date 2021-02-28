@@ -19,11 +19,11 @@ public class UserDaoService {
         userList.add(new User(3, "Jack", new Date(), new ArrayList<>()));
     }
 
-    public List<User> findAll() {
+    public List<User> findAllUsers() {
         return userList;
     }
 
-    public User save(User user) {
+    public User saveUser(User user) {
         if (user.getId() == null) {
             user.setId(++userCount);
         }
@@ -31,26 +31,26 @@ public class UserDaoService {
         return user;
     }
 
-    public Optional<User> findOne(int id) {
+    public Optional<User> findUser(int id) {
         return userList.stream()
                 .filter(u -> u.getId().equals(id))
                 .findFirst();
     }
 
-    public void deleteOne(int id) {
-        Optional<User> optUser = findOne(id);
+    public void deleteUser(int id) {
+        Optional<User> optUser = findUser(id);
         optUser.ifPresentOrElse(userList::remove, () -> {
             throw new UserNotFoundException();
         });
     }
 
     public List<Post> findAllPosts(int userId) {
-        Optional<User> optUser = findOne(userId);
+        Optional<User> optUser = findUser(userId);
         return optUser.map(User::getPostList).orElseThrow(UserNotFoundException::new);
     }
 
     public Optional<Post> findPost(int userId, int postId) {
-        Optional<User> optUser = findOne(userId);
+        Optional<User> optUser = findUser(userId);
         if (optUser.isPresent()) {
             User u = optUser.get();
             List<Post> postList = u.getPostList();
@@ -62,7 +62,7 @@ public class UserDaoService {
     }
 
     public Post savePost(int userId, Post post) {
-        Optional<User> optUser = findOne(userId);
+        Optional<User> optUser = findUser(userId);
         return optUser.map(user -> {
             if (post.getId() == null) {
                 post.setId(++userCount);
