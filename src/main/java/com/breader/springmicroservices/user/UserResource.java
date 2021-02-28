@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class UserResource {
     }
 
     @PostMapping("users")
-    public ResponseEntity<URI> saveUser(@RequestBody User u) {
+    public ResponseEntity<URI> saveUser(@Valid @RequestBody User u) {
         User newUser = userDaoService.save(u);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
