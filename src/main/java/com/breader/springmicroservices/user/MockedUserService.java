@@ -1,6 +1,7 @@
 package com.breader.springmicroservices.user;
 
 import com.breader.springmicroservices.exception.UserNotFoundException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -9,7 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserDaoService {
+@Profile("mock")
+public class MockedUserService implements UserService {
     private static final List<User> userList = new ArrayList<>();
     private static int userCount = 3;
 
@@ -19,10 +21,12 @@ public class UserDaoService {
         userList.add(new User(3, "Jack", new Date(), new ArrayList<>()));
     }
 
+    @Override
     public List<User> findAllUsers() {
         return userList;
     }
 
+    @Override
     public User saveUser(User user) {
         if (user.getId() == null) {
             user.setId(++userCount);
@@ -31,48 +35,18 @@ public class UserDaoService {
         return user;
     }
 
+    @Override
     public Optional<User> findUser(int id) {
         return userList.stream()
                 .filter(u -> u.getId().equals(id))
                 .findFirst();
     }
 
+    @Override
     public void deleteUser(int id) {
         Optional<User> optUser = findUser(id);
         optUser.ifPresentOrElse(userList::remove, () -> {
             throw new UserNotFoundException();
         });
-    }
-
-    public List<Post> findAllPosts(int userId) {
-        Optional<User> optUser = findUser(userId);
-        return optUser.map(User::getPostList).orElseThrow(UserNotFoundException::new);
-    }
-
-    public Optional<Post> findPost(int userId, int postId) {
-        Optional<User> optUser = findUser(userId);
-        if (optUser.isPresent()) {
-            User u = optUser.get();
-            List<Post> postList = u.getPostList();
-            return postList.stream()
-                    .filter(p -> p.getId().equals(postId))
-                    .findFirst();
-        }
-        throw new UserNotFoundException();
-    }
-
-    public Post savePost(int userId, Post post) {
-        Optional<User> optUser = findUser(userId);
-        return optUser.map(user -> {
-            if (post.getId() == null) {
-                post.setId(++userCount);
-                post.setUserId(userId);
-                post.setPostedAt(new Date());
-
-                user.setPostList(new ArrayList<>());
-            }
-            user.getPostList().add(post);
-            return post;
-        }).orElseThrow(UserNotFoundException::new);
     }
 }
