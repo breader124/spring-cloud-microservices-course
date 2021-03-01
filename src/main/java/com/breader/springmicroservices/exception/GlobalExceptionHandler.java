@@ -13,7 +13,7 @@ import java.util.Date;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(PostNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleUserNotFoundException(Exception ex, WebRequest webRequest) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
                 new Date(),

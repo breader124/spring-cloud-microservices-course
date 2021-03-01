@@ -13,12 +13,14 @@ import java.util.Optional;
 @Profile("mock")
 public class MockedUserService implements UserService {
     private static final List<User> userList = new ArrayList<>();
-    private static int userCount = 3;
+    private static int userCount;
 
     static {
         userList.add(new User(1, "Adam", new Date(), new ArrayList<>()));
         userList.add(new User(2, "Eve", new Date(), new ArrayList<>()));
         userList.add(new User(3, "Jack", new Date(), new ArrayList<>()));
+
+        userCount = userList.size();
     }
 
     @Override
