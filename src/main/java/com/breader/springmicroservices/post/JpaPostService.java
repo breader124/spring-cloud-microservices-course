@@ -7,12 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Profile("jpa")
+@Transactional
 @RequiredArgsConstructor
 public class JpaPostService implements PostService {
     private final UserRepository userRepository;
