@@ -1,0 +1,3 @@
+[submodule "git-localconfig-repo"]
+	path = git-localconfig-repo
+	url = /home/adrian_chlebosz/IdeaProjects/spring-microservices/git-localconfig-repo/
