@@ -56,7 +56,7 @@ public class CurrencyConversionController {
         Double calculatedAmount = quantity * response.getConversionMultiple();
         response.setQuantity(quantity);
         response.setTotalCalculatedAmount(calculatedAmount);
-        response.setEnvironment(environment.getProperty("local.server.port"));
+        response.setEnvironment(environment.getProperty("local.server.port") + " feign");
 
         return response;
     }
