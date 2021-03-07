@@ -9,16 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Random;
-
 @RestController
 @RequiredArgsConstructor
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
-
     private final Environment environment;
-    private final Random r = new Random();
 
     @GetMapping("currency-exchange/from/{from}/to/{to}")
     public Exchange getCurrencyExchangeInfo(@PathVariable String from, @PathVariable String to) throws ExchangeNotFoundException {
