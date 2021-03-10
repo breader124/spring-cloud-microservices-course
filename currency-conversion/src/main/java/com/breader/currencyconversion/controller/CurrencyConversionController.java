@@ -22,7 +22,7 @@ public class CurrencyConversionController {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @GetMapping("currency-exchange/from/{from}/to/{to}/quantity/{quantity}")
+    @GetMapping("currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion getCurrencyExchangeInfo(
             @PathVariable String from,
             @PathVariable String to,
@@ -45,7 +45,7 @@ public class CurrencyConversionController {
         return response;
     }
 
-    @GetMapping("currency-exchange-feign/from/{from}/to/{to}/quantity/{quantity}")
+    @GetMapping("currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion getCurrencyExchangeInfoWithFeign(
             @PathVariable String from,
             @PathVariable String to,
