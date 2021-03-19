@@ -6,6 +6,7 @@
     <modules>
         <module>restful-web-services</module>
         <module>limits-service</module>
+        <module>api-gateway</module>
     </modules>
     <groupId>com.breader</groupId>
     <artifactId>spring-microservices</artifactId>
